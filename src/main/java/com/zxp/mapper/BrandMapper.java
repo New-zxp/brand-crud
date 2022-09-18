@@ -4,7 +4,7 @@ import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
-public interface BrandMapper {
+public interface  BrandMapper {
     List<Brand> selectAll();
     void addBrand(Brand brand);
     void deleteById(int id);
