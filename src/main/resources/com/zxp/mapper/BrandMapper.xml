@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--
+namespace:名称空间,接口所在位置
+select id:方法名称
+resultType:返回值类型
+-->
+<mapper namespace="com.zxp.mapper.BrandMapper">
+    <resultMap id="brandResultMap" type="com.zxp.pojo.Brand">
+        <result column="brand_name" property="brandName"></result>
+        <result column="company_name" property="companyName"></result>
+    </resultMap>
+    <insert id="addBrand">
+        insert into tb_brand
+        values (null, #{brandName}, #{companyName}, #{ordered}, #{description}, #{status});
+    </insert>
+    <update id="updateBrand">
+        update tb_brand
+        set brand_name=#{brandName},
+            company_name=#{companyName},
+            ordered=#{ordered},
+            status=#{status}
+        where id = #{id};
+    </update>
+    <delete id="deleteById">
+        delete
+        from tb_brand
+        where id = #{id};
+    </delete>
+    <delete id="deleteByIds">
+        delete from tb_brand where id in
+        <foreach collection="ids" item="id" separator="," open="(" close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <select id="selectAll" resultMap="brandResultMap">
+        select *
+        from tb_brand;
+    </select>
+    <select id="selectByPage" resultMap="brandResultMap">
+        select *
+        from tb_brand limit #{begin}, #{size};
+    </select>
+    <select id="selectTotalCount" resultType="java.lang.Integer">
+        select count(*)
+        from tb_brand;
+    </select>
+    <select id="selectByPageAndCondition" resultMap="brandResultMap">
+        select *
+        from tb_brand
+        <where>
+            <if test="brand.status != null">
+                and status = #{brand.status}
+            </if>
+            <if test="brand.companyName != null and brand.companyName != '' ">
+                and company_name like #{brand.companyName}
+            </if>
+            <if test="brand.brandName != null and brand.brandName != '' ">
+                and brand_name like #{brand.brandName}
+            </if>
+        </where>
+        limit #{begin}, #{size}
+    </select>
+    <select id="selectTotalCountByCondition" resultType="java.lang.Integer">
+        select count(*)
+        from tb_brand
+        <where>
+            <if test="status != null">
+                and status = #{status}
+            </if>
+            <if test="companyName != null and companyName != '' ">
+                and company_name like #{companyName}
+            </if>
+            <if test="brandName != null and brandName != '' ">
+                and brand_name like #{brandName}
+            </if>
+        </where>
+    </select>
+</mapper>
